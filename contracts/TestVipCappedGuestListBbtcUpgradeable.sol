@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
-import "./SafeMathUpgradeable.sol";
+import "@openzeppelin-contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/cryptography/MerkleProofUpgradeable.sol";
 
@@ -165,6 +165,6 @@ contract TestVipCappedGuestListBbtcUpgradeable is OwnableUpgradeable {
         bytes32[] calldata merkleProof
     ) internal view returns (bool) {
         bytes32 node = keccak256(abi.encodePacked(account));
-        return MerkleProof.verify(merkleProof, guestRoot, node);
+        return MerkleProofUpgradeable.verify(merkleProof, guestRoot, node);
     }
 }
