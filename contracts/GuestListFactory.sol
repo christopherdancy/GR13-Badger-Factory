@@ -1,14 +1,14 @@
-// // SPDX-License-Identifier: GPL-3.0
-// pragma solidity =0.8.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
-// import "./TestVipCappedGuestListBbtcUpgradeable.sol";
-// import "@openzeppelin-contracts-upgradeable/proxy/ClonesUpgradeable.sol";
+import "@openzeppelin-upgradeable/proxy/ClonesUpgradeable.sol";
+import "../interfaces/ITestVipCappedGuestListBbtcUpgradeable.sol.sol";
 
-// contract GuestListFactory {
+contract GuestListFactory {
 
-//     event GuestListCreated(address indexed guestList);
-//     function createGuestList(TestVipCappedGuestListBbtcUpgradeable guestlistImpl) external returns(address){
+    event GuestListCreated(address indexed guestList);
+    function createGuestList(ITestVipCappedGuestListBbtcUpgradeable guestlistImpl) external returns(address){
 
 
-//     }
-// }
+    }
+}

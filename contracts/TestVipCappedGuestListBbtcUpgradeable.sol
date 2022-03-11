@@ -5,7 +5,6 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin-contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/cryptography/MerkleProofUpgradeable.sol";
-import "@openzeppelin-contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 
 import "../../interfaces/yearn/BadgerGuestlistApi.sol";
 import "../../interfaces/yearn/BadgerWrapperApi.sol";
