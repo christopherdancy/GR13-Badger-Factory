@@ -1,0 +1,40 @@
+dependencies:
+# - <organization/repo>@<version>
+ - smartcontractkit/chainlink-brownie-contracts@1.1.1
+ - OpenZeppelin/openzeppelin-contracts@4.5.0
+ - OpenZeppelin/openzeppelin-contracts-upgradeable@3.4.0
+ - aave/protocol-v2@1.0.1
+compiler:
+  solc:
+    remappings:
+     - '@chainlink=smartcontractkit/chainlink-brownie-contracts@1.1.1'
+     - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.5.0'
+     - '@aave=aave/protocol-v2@1.0.1'
+     - "@openzeppelin-contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@3.4.0/contracts/"
+dotenv: .env
+networks:
+  default: 'development'
+  development:
+    keyhash: '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4'
+    fee: 10_000_000_000_000_000
+    verify: False
+  mainnet-fork:
+    eth_usd_price_feed: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'
+    weth_token: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+    lending_pool_address_provider: '0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5'
+    dai_eth_price_feed: '0x773616E4d11A78F511299002da57A0a94577F1f4'
+    dai_token: '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+  kovan:
+    eth_usd_price_feed: '0x9326BFA02ADD2366b30bacB125260Af641031331'
+    vrf_coordinator: '0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9'
+    link_token: '0xa36085F69e2889c224210F603D836748e7dC0088'
+    weth_token: '0xd0A1E359811322d97991E03f863a0C30C2cF029C'
+    keyhash: '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4'
+    lending_pool_address_provider: '0x88757f2f99175387aB4C6a4b3067c77A695b0349'
+    dai_eth_price_feed: '0x22B58f1EbEDfCA50feF632bD73368b2FdA96D541'
+    dai_token: '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD'
+    fee: 100_000_000_000_000_000
+    verify: True
+
+wallets:
+  from_key: ${PRIVATE_KEY}
