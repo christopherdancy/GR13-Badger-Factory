@@ -1,5 +1,8 @@
 from brownie import accounts, network, config, TestVipCappedGuestListBbtcUpgradeable
 
+FORKED_LOCAL_ENVIRONMENTS = ["mainnet-fork", "mainnet-fork-dev"]
+LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
+
 
 def main():
     deploy()
