@@ -34,6 +34,6 @@ contract GuestListFactory is IGuestListFactory{
         clone.setGuestRoot(guestRoot_);
         clone.transferOwnership(newOwner_);
 
-        emit GuestListCreated(guestlistImpl_, wrapper_, newOwner_, userCap_, totalCap_, guestRoot_);
+        emit GuestListCreated(guestlistImpl_, clone, wrapper_, newOwner_, userCap_, totalCap_, guestRoot_);
     }
 }

@@ -8,7 +8,9 @@ interface IGuestListFactory {
     error UintZero();
     error Bytes32Zero();
     
-    event GuestListCreated(address guestlistImpl_,
+    event GuestListCreated(
+        address guestlistImpl_,
+        ITestVipCappedGuestListBbtcUpgradeable clone,
         address wrapper_,
         address newOwner_,
         uint256 userCap_,
