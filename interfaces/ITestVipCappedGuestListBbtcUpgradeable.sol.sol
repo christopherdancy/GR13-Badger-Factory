@@ -65,4 +65,10 @@ interface ITestVipCappedGuestListBbtcUpgradeable {
         uint256 _amount,
         bytes32[] calldata _merkleProof
     ) external view returns (bool);
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) external;
 }
