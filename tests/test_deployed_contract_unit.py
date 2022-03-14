@@ -56,7 +56,7 @@ def test_merckle_root():
         MERCKLE_ROOT,
     )
     print(f"MerckleRoot of deployed contract: {deployed_contract.guestRoot()}")
-    assert deployed_contract.guestRoot() == MERCKLE_ROOT
+    assert deployed_contract.guestRoot() == "0x" + MERCKLE_ROOT
 
 
 def test_wrapper():
