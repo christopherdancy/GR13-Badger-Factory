@@ -20,10 +20,11 @@ interface IGuestListFactory {
 
     function createGuestList(
         address guestlistImpl_,
+        address usdDenomToken_,
         address wrapper_,
         address newOwner_,
-        uint256 userCap_,
-        uint256 totalCap_,
+        uint256 userCapUSD_,
+        uint256 totalCapUSD_,
         bytes32 guestRoot_
     ) external returns (ITestVipCappedGuestListBbtcUpgradeable clone);
 }
