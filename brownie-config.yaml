@@ -31,6 +31,7 @@ networks:
     lending_pool_address_provider: '0x88757f2f99175387aB4C6a4b3067c77A695b0349'
     dai_eth_price_feed: '0x22B58f1EbEDfCA50feF632bD73368b2FdA96D541'
     dai_token: '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD'
+    guest_list_base_contract: '0xF7f69CAACD1C3a0241491C2bf3Fb9eC3b8b01355'
     fee: 100_000_000_000_000_000
     verify: True
 

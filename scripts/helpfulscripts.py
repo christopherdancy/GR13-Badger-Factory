@@ -7,6 +7,7 @@ from brownie import (
     TestToken,
     GuestListFactory,
     TestVipCappedGuestListBbtcUpgradeable,
+    OptimalSwap
 )
 
 
@@ -67,6 +68,13 @@ def get_contract(contract_address):
 
 def get_contract_factory(contract_address):
     contract_type = GuestListFactory
+    contract = Contract.from_abi(
+        contract_type._name, contract_address, contract_type.abi
+    )
+    return contract
+
+def get_contract_optimalswap(contract_address):
+    contract_type = OptimalSwap
     contract = Contract.from_abi(
         contract_type._name, contract_address, contract_type.abi
     )
