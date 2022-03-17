@@ -4,8 +4,8 @@ import "../interfaces/ICurveRouter.sol";
 import "../interfaces/IUniswapRouterV2.sol";
 
 contract OptimalSwap {
-    ICurveRouter immutable CURVE_ROUTER;
-    IUniswapRouterV2 immutable UNI_ROUTER;
+    ICurveRouter immutable public CURVE_ROUTER;
+    IUniswapRouterV2 immutable public UNI_ROUTER;
 
     constructor(ICurveRouter curveRouter, IUniswapRouterV2 uniRouter) {
         CURVE_ROUTER = curveRouter;
