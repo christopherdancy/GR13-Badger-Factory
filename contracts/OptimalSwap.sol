@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: Unlicense
 
 pragma solidity ^0.8.0;
-import "../interfaces/IBaseV1Router01.sol";
-import "../interfaces/ICurveRouter.sol";
-import "../interfaces/IUniswapRouterV2.sol";
+import "../interfaces/swaps/IBaseV1Router01.sol";
+import "../interfaces/swaps/ICurveRouter.sol";
+import "../interfaces/swaps/IUniswapRouterV2.sol";
 
 contract OptimalSwap {
     ICurveRouter immutable public CURVE_ROUTER;

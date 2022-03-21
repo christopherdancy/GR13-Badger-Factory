@@ -1,8 +1,8 @@
 //SPDX-License-Identifier: Unlicense
 
 pragma solidity ^0.8.0;
-import "./IUniswapV2Pair.sol";
-import "./IUniswapRouterV2.sol";
+import "./swaps/IUniswapV2Pair.sol";
+import "./swaps/IUniswapRouterV2.sol";
 
 interface ILPSwap {
     function findLPSwap(

@@ -6,8 +6,8 @@ import "@openzeppelin-contracts-upgradeable/math/SafeMathUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-contracts-upgradeable/cryptography/MerkleProofUpgradeable.sol";
 
-import "../../interfaces/yearn/BadgerGuestlistApi.sol";
-import "../../interfaces/yearn/BadgerWrapperApi.sol";
+import "../../../interfaces/mocks/yearn/BadgerGuestlistApi.sol";
+import "../../interfaces/mocks/yearn/BadgerWrapperApi.sol";
 
 /**
  * @notice A basic guest list contract for testing.

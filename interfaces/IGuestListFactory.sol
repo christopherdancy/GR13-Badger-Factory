@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-import "../interfaces/ITestVipCappedGuestListBbtcUpgradeable.sol.sol";
-import "../interfaces/ITestVipCappedGuestListBbtcUpgradeable.sol.sol";
-import "../interfaces/IOptimalSwap.sol";
-import "../interfaces/ILPSwap.sol";
-import "../interfaces/IUniswapV2Pair.sol";
+import "./ITestVipCappedGuestListBbtcUpgradeable.sol";
+import "./IOptimalSwap.sol";
+import "./ILPSwap.sol";
+import "./swaps/IUniswapV2Pair.sol";
 
 interface IGuestListFactory {
     error AddressZero();
