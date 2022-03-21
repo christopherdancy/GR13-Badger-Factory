@@ -2,6 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "../interfaces/ITestVipCappedGuestListBbtcUpgradeable.sol.sol";
+import "../interfaces/ITestVipCappedGuestListBbtcUpgradeable.sol.sol";
+import "../interfaces/IOptimalSwap.sol";
+import "../interfaces/ILPSwap.sol";
+import "../interfaces/IUniswapV2Pair.sol";
 
 interface IGuestListFactory {
     error AddressZero();
@@ -18,7 +22,21 @@ interface IGuestListFactory {
         bytes32 guestRoot_
     );
 
-    function createGuestList(
+    function createGuestListUnderlyingToken(
+        IOptimalSwap optimalSwap_, 
+        address guestlistImpl_,
+        address usdDenomToken_,
+        address wrapper_,
+        address newOwner_,
+        uint256 userCapUSD_,
+        uint256 totalCapUSD_,
+        bytes32 guestRoot_
+    ) external returns (ITestVipCappedGuestListBbtcUpgradeable clone);
+
+    function createGuestListLpToken(
+        ILPSwap lpSwap_,
+        IOptimalSwap optimalSwap_,
+        address weth_,
         address guestlistImpl_,
         address usdDenomToken_,
         address wrapper_,
