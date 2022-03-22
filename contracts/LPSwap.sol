@@ -10,6 +10,8 @@ contract LPSwap is ILPSwap {
     using SafeMath for uint256;
     using HomoraMath for uint256;
     uint256 public reserve0;
+    address public t0;
+    event Price(uint256 indexed price, uint256 r0);
 
     function findLPSwap(
         IUniswapV2Pair pair,
@@ -24,6 +26,7 @@ contract LPSwap is ILPSwap {
         (uint256 r0, uint256 r1, uint256 timestamp) = IUniswapV2Pair(pair)
             .getReserves();
         reserve0 = r0;
+        t0 = token0;
         // Calulcate K
         uint256 sqrtK = HomoraMath.sqrt(r0.mul(r1)).fdiv(totalSupply); // in 2**112
         // Reserves value in ETH
@@ -42,6 +45,7 @@ contract LPSwap is ILPSwap {
             .div(2**56);
         // Lp(each) value in USD
         lpUSD = _checkUni(weth, usdDenomToken, LPWeth, router);
+        emit Price(lpUSD, r0);
     }
 
     function _checkUni(
