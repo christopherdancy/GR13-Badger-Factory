@@ -10,6 +10,7 @@ from brownie import (
     LPSwap,
 )
 from eth_account import Account
+from web3 import eth
 from scripts.helpfulscripts import (
     deploy_token,
     get_account,
@@ -46,20 +47,24 @@ def main():
     iUniSwapPair = interface.IUniswapV2Pair(wrapper)
     (r0, r1, timestamp) = iUniSwapPair.getReserves()
     print(f"Reserves: {r0}")
-
     time.sleep(5)
-    tx_price = lpSwap.findLPSwap.call(
+    # Test lpSwap
+    tx_price = lpSwap.findLPSwap(
         iUniSwapPair,
         WETH_TOKEN_ADDRESS_ETH,
         USDT_TOKEN_ADDRESS_ETH,
         optimalSwap.UNI_ROUTER(),
         {"from": account},
     )
-    print(f"LP price of deployed contract: {tx_price}")
-    time.sleep(5)
+    tx_price.wait(1)
+    price = tx_price.events[-1]["price"]
+    print(f"Prix du lp token: {price}")
+    print(f"Events: {tx_price.events[-1]}")
 
     reserve0 = lpSwap.reserve0()
     print(f"reserve0 of deployed contract: {reserve0}")
+    token0 = lpSwap.t0()
+    print(f"address of token0 of deployed contract: {token0}")
 
     # base_contract = deploy_base_contract()
     # factory = deploy_factory()
