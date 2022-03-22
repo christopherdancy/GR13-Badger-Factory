@@ -11,7 +11,15 @@ contract LPSwap is ILPSwap {
     using HomoraMath for uint256;
     uint256 public reserve0;
     address public t0;
-    event Price(uint256 indexed price, uint256 r0);
+    event Price(
+        uint256 indexed price,
+        uint256 r0,
+        uint256 LPWeth,
+        uint256 totalSupply,
+        uint256 sqrtK,
+        uint256 px0,
+        uint256 px1
+    );
 
     function findLPSwap(
         IUniswapV2Pair pair,
@@ -45,7 +53,7 @@ contract LPSwap is ILPSwap {
             .div(2**56);
         // Lp(each) value in USD
         lpUSD = _checkUni(weth, usdDenomToken, LPWeth, router);
-        emit Price(lpUSD, r0);
+        emit Price(lpUSD, r0, LPWeth, totalSupply, sqrtK, px0, px1);
     }
 
     function _checkUni(
