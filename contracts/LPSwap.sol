@@ -64,13 +64,25 @@ contract LPSwap is ILPSwap {
     ) internal returns (uint256 px) {
         // Check uni (Can Revert)
         address[] memory path = new address[](2);
-        path[0] = address(tokenIn);
-        path[1] = address(weth);
+        path[0] = address(weth);
+        path[1] = address(tokenIn);
 
         try router.getAmountsOut(amountIn, path) returns (
             uint256[] memory uniAmounts
         ) {
             px = uniAmounts[uniAmounts.length - 1]; // Last one is the outToken
+            if (px == 0) {
+                address[] memory revertedpath = new address[](2);
+                revertedpath[0] = address(tokenIn);
+                revertedpath[1] = address(weth);
+                try router.getAmountsOut(amountIn, revertedpath) returns (
+                    uint256[] memory uniAmounts
+                ) {
+                    px = uniAmounts[uniAmounts.length - 1]; // Last one is the outToken
+                } catch (bytes memory) {
+                    // We ignore as it means it's zero
+                }
+            }
         } catch (bytes memory) {
             // We ignore as it means it's zero
         }
