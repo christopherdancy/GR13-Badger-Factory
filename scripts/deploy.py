@@ -30,55 +30,38 @@ from scripts.constants import (
     CURVE_ROUTER_ADDRESS_ETH,
     LINK_TOKEN_ADDRESS_ETH,
     USDT_TOKEN_ADDRESS_ETH,
-    LP_TOKEN_ADDRESS_ETH,
+    LP_RADIX_USDC_ETH,
     WETH_TOKEN_ADDRESS_ETH,
     get_curve_router_address_eth,
 )
 
 
 def main():
-    wrapper = LP_TOKEN_ADDRESS_ETH
+    wrapper = LP_RADIX_USDC_ETH
     account = get_account()
 
-    curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
-    unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
-    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
-    lpSwap = LPSwap.deploy({"from": account})
-    iUniSwapPair = interface.IUniswapV2Pair(wrapper)
-    (r0, r1, timestamp) = iUniSwapPair.getReserves()
-    print(f"Reserves: {r0}")
-    time.sleep(5)
-    # Test lpSwap
-    tx_price = lpSwap.findLPSwap(
-        iUniSwapPair,
-        WETH_TOKEN_ADDRESS_ETH,
+    base_contract = deploy_base_contract()
+    factory = deploy_factory()
+    print(
+        factory,
+        base_contract,
         USDT_TOKEN_ADDRESS_ETH,
-        optimalSwap.UNI_ROUTER(),
-        {"from": account},
+        LP_RADIX_USDC_ETH,
+        USER_CAP,
+        TOTAL_CAP,
+        MERCKLE_ROOT,
     )
-    tx_price.wait(1)
-    price = tx_price.events[-1]["price"]
-    print(f"Prix du lp token: {price}")
-    print(f"Events: {tx_price.events[-1]}")
-
-    reserve0 = lpSwap.reserve0()
-    print(f"reserve0 of deployed contract: {reserve0}")
-    token0 = lpSwap.t0()
-    print(f"address of token0 of deployed contract: {token0}")
-
-    # base_contract = deploy_base_contract()
-    # factory = deploy_factory()
-    # deployed_contract = deploy_contract_lp(
-    #     factory,
-    #     base_contract,
-    #     USDT_TOKEN_ADDRESS_ETH,
-    #     LP_TOKEN_ADDRESS_ETH,
-    #     account,
-    #     USER_CAP,
-    #     TOTAL_CAP,
-    #     MERCKLE_ROOT,
-    # )
-    # print(f"userDepositCap of deployed contract: {deployed_contract.userDepositCap()}")
+    deployed_contract = deploy_contract_lp(
+        factory,
+        base_contract,
+        USDT_TOKEN_ADDRESS_ETH,
+        wrapper,
+        account,
+        USER_CAP,
+        TOTAL_CAP,
+        MERCKLE_ROOT,
+    )
+    print(f"userDepositCap of deployed contract: {deployed_contract.userDepositCap()}")
 
 
 def deploy_base_contract():
@@ -224,3 +207,41 @@ def print_user_cap():
         MERCKLE_ROOT,
     )
     print(f"UserCap of deployed Contract: {contract_deployed.userDepositCap()}")
+
+
+def deploy_swap(curve_address, uniswap_address):
+    # deploy cloned guestList contract
+    account = get_account()
+    # get the routers to create the factory
+    curve_router = interface.ICurveRouter(curve_address)
+    unispooky_router = interface.IUniswapRouterV2(uniswap_address)
+    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+    time.sleep(10)
+    return optimalSwap
+
+
+# curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
+#     unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
+#     optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+#     lpSwap = LPSwap.deploy({"from": account})
+#     iUniSwapPair = interface.IUniswapV2Pair(wrapper)
+#     (r0, r1, timestamp) = iUniSwapPair.getReserves()
+#     print(f"Reserves: {r0}")
+#     time.sleep(5)
+#     # Test lpSwap
+#     tx_price = lpSwap.findLPSwap(
+#         iUniSwapPair,
+#         WETH_TOKEN_ADDRESS_ETH,
+#         USDT_TOKEN_ADDRESS_ETH,
+#         optimalSwap.UNI_ROUTER(),
+#         {"from": account},
+#     )
+#     tx_price.wait(1)
+#     price = tx_price.events[-1]["price"]
+#     print(f"Prix du lp token: {price}")
+#     print(f"Events: {tx_price.events[-1]}")
+
+#     reserve0 = lpSwap.reserve0()
+#     print(f"reserve0 of deployed contract: {reserve0}")
+#     token0 = lpSwap.t0()
+#     print(f"address of token0 of deployed contract: {token0}")
