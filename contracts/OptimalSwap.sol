@@ -1,11 +1,13 @@
+//SPDX-License-Identifier: Unlicense
+
 pragma solidity ^0.8.0;
-import "../interfaces/IBaseV1Router01.sol";
-import "../interfaces/ICurveRouter.sol";
-import "../interfaces/IUniswapRouterV2.sol";
+import "../interfaces/swaps/IBaseV1Router01.sol";
+import "../interfaces/swaps/ICurveRouter.sol";
+import "../interfaces/swaps/IUniswapRouterV2.sol";
 
 contract OptimalSwap {
-    ICurveRouter immutable CURVE_ROUTER;
-    IUniswapRouterV2 immutable UNI_ROUTER;
+    ICurveRouter immutable public CURVE_ROUTER;
+    IUniswapRouterV2 immutable public UNI_ROUTER;
 
     constructor(ICurveRouter curveRouter, IUniswapRouterV2 uniRouter) {
         CURVE_ROUTER = curveRouter;
@@ -13,6 +15,9 @@ contract OptimalSwap {
     }
 
     /// @dev View function for testing the routing of the strategy
+    /// @param tokenIn Token user wants to exchange
+    /// @param tokenOut Token user is exchanging for
+    /// @param amountIn Total Tokens user wants to exchange
     function findOptimalSwap(
         address tokenIn,
         address tokenOut,
