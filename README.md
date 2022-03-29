@@ -11,5 +11,6 @@ All tests are ran against a mainnet fork.
 
 `
 Create .env from .env.example and add infura private key
+brownie compile
 brownie test --network mainnet-fork
 `
