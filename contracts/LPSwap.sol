@@ -9,18 +9,13 @@ import "../interfaces/swaps/IUniswapV2Pair.sol";
 contract LPSwap is ILPSwap {
     using SafeMath for uint256;
     using HomoraMath for uint256;
-    uint256 public reserve0;
-    address public t0;
-    event Price(
-        uint256 indexed price,
-        uint256 r0,
-        uint256 LPWeth,
-        uint256 totalSupply,
-        uint256 sqrtK,
-        uint256 px0,
-        uint256 px1
-    );
 
+    /// @dev View function for finding LP swap
+    /// @param pair Uniswap Pair Address
+    /// @param weth Weth Address
+    /// @param usdDenomToken Address of the stable coin 
+    /// @param router Uniswap router Address
+    /// @return lpUSD lpToken denom in USD
     function findLPSwap(
         IUniswapV2Pair pair,
         address weth,
@@ -33,8 +28,6 @@ contract LPSwap is ILPSwap {
         uint256 totalSupply = IUniswapV2Pair(pair).totalSupply();
         (uint256 r0, uint256 r1, uint256 timestamp) = IUniswapV2Pair(pair)
             .getReserves();
-        reserve0 = r0;
-        t0 = token0;
         // Calulcate K
         uint256 sqrtK = HomoraMath.sqrt(r0.mul(r1)).fdiv(totalSupply); // in 2**112
         // Reserves value in ETH
@@ -56,6 +49,12 @@ contract LPSwap is ILPSwap {
         emit Price(lpUSD, r0, LPWeth, totalSupply, sqrtK, px0, px1);
     }
 
+    /// @dev View function for testing the routing of the strategy
+    /// @param tokenIn Token user wants to exchange
+    /// @param weth Weth Address    
+    /// @param amountIn Total Tokens user wants to exchange
+    /// @param router Uniswap router Address
+    /// @return px Price Exchange
     function _checkUni(
         address tokenIn,
         address weth,
