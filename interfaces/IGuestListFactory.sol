@@ -21,6 +21,16 @@ interface IGuestListFactory {
         bytes32 guestRoot_
     );
 
+    /// @notice Create a GuestList with an underlying token
+    /// @dev Pass in USD Max - will be converted to total token max
+    /// @param optimalSwap_ Optimal Swap Address
+    /// @param guestlistImpl_ Guestlist Impl contract
+    /// @param usdDenomToken_ USD Stable coin Address
+    /// @param wrapper_ Token being capped
+    /// @param newOwner_ GuestList contract Owner
+    /// @param userCapUSD_ Total USD user cap
+    /// @param totalCapUSD_ Total USD total cap
+    /// @param guestRoot_ Guestlist Merkle Root
     function createGuestListUnderlyingToken(
         IOptimalSwap optimalSwap_, 
         address guestlistImpl_,
@@ -32,6 +42,18 @@ interface IGuestListFactory {
         bytes32 guestRoot_
     ) external returns (ITestVipCappedGuestListBbtcUpgradeable clone);
 
+    /// @notice Create a GuestList with an LP token
+    /// @dev Pass in USD Max - will be converted to total token max
+    /// @param lpSwap_ LP Swap Address
+    /// @param optimalSwap_ Optimal Swap Address
+    /// @param weth_ Weth Token
+    /// @param guestlistImpl_ Guestlist Impl contract
+    /// @param usdDenomToken_ USD Stable coin Address
+    /// @param wrapper_ Token being capped
+    /// @param newOwner_ GuestList contract Owner
+    /// @param userCapUSD_ Total USD user cap
+    /// @param totalCapUSD_ Total USD total cap
+    /// @param guestRoot_ Guestlist Merkle Root
     function createGuestListLpToken(
         ILPSwap lpSwap_,
         IOptimalSwap optimalSwap_,
