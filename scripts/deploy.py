@@ -7,8 +7,10 @@ from brownie import (
     GuestListFactory,
     interface,
     OptimalSwap,
+    LPSwap,
 )
 from eth_account import Account
+from web3 import eth
 from scripts.helpfulscripts import (
     deploy_token,
     get_account,
@@ -19,7 +21,6 @@ from scripts.helpfulscripts import (
     FORKED_LOCAL_ENVIRONMENTS,
 )
 import time
-from Crypto.Hash import keccak
 from scripts.constants import (
     USER_CAP,
     TOTAL_CAP,
@@ -29,15 +30,38 @@ from scripts.constants import (
     CURVE_ROUTER_ADDRESS_ETH,
     LINK_TOKEN_ADDRESS_ETH,
     USDT_TOKEN_ADDRESS_ETH,
+    LP_RADIX_USDC_ETH,
+    WETH_TOKEN_ADDRESS_ETH,
     get_curve_router_address_eth,
 )
 
-FORKED_LOCAL_ENVIRONMENTS = ["mainnet-fork", "mainnet-fork-dev"]
-LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
-
 
 def main():
-    pass
+    wrapper = LP_RADIX_USDC_ETH
+    account = get_account()
+
+    base_contract = deploy_base_contract()
+    factory = deploy_factory()
+    print(
+        factory,
+        base_contract,
+        USDT_TOKEN_ADDRESS_ETH,
+        LP_RADIX_USDC_ETH,
+        USER_CAP,
+        TOTAL_CAP,
+        MERCKLE_ROOT,
+    )
+    deployed_contract = deploy_contract_lp(
+        factory,
+        base_contract,
+        USDT_TOKEN_ADDRESS_ETH,
+        wrapper,
+        account,
+        USER_CAP,
+        TOTAL_CAP,
+        MERCKLE_ROOT,
+    )
+    print(f"userDepositCap of deployed contract: {deployed_contract.userDepositCap()}")
 
 
 def deploy_base_contract():
@@ -53,12 +77,8 @@ def deploy_base_contract():
 def deploy_factory():
     # deploy the contract factory
     account = get_account()
-    # get the routers to create the factory
-    curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
-    unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
-    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
 
-    contract_factory = GuestListFactory.deploy(optimalSwap, {"from": account})
+    contract_factory = GuestListFactory.deploy({"from": account})
     time.sleep(15)
     print(f"factory contract address{contract_factory.address}")
     return contract_factory
@@ -76,7 +96,13 @@ def deploy_contract(
 ):
     # deploy cloned guestList contract
     account = get_account()
-    tx_create_guest_list = contract_factory.createGuestList(
+    # get the routers to create the factory
+    curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
+    unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
+    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+
+    tx_create_guest_list = contract_factory.createGuestListUnderlyingToken(
+        optimalSwap,
         contract_address_to_clone,
         usd_token_address,
         wrapper,
@@ -90,7 +116,44 @@ def deploy_contract(
     clone_address = tx_create_guest_list.events[-1]["clone"]
     print(f"clone address {clone_address}")
     contract = get_contract(clone_address)
+    return contract
 
+
+def deploy_contract_lp(
+    contract_factory,
+    contract_address_to_clone,
+    usd_token_address,
+    wrapper,
+    address_new_owner,
+    user_cap,
+    total_cap,
+    merckle_root,
+):
+    # deploy cloned guestList contract
+    account = get_account()
+    # get the routers to create the factory
+    curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
+    unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
+    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+    lpSwap = LPSwap.deploy({"from": account})
+    time.sleep(10)
+    tx_create_guest_list = contract_factory.createGuestListLpToken(
+        lpSwap,
+        optimalSwap,
+        WETH_TOKEN_ADDRESS_ETH,
+        contract_address_to_clone,
+        usd_token_address,
+        wrapper,
+        address_new_owner,
+        user_cap,
+        total_cap,
+        merckle_root,
+        {"from": account},
+    )
+    tx_create_guest_list.wait(1)
+    clone_address = tx_create_guest_list.events[-1]["clone"]
+    print(f"clone address {clone_address}")
+    contract = get_contract(clone_address)
     return contract
 
 
@@ -144,3 +207,41 @@ def print_user_cap():
         MERCKLE_ROOT,
     )
     print(f"UserCap of deployed Contract: {contract_deployed.userDepositCap()}")
+
+
+def deploy_swap(curve_address, uniswap_address):
+    # deploy cloned guestList contract
+    account = get_account()
+    # get the routers to create the factory
+    curve_router = interface.ICurveRouter(curve_address)
+    unispooky_router = interface.IUniswapRouterV2(uniswap_address)
+    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+    time.sleep(10)
+    return optimalSwap
+
+
+# curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
+#     unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
+#     optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+#     lpSwap = LPSwap.deploy({"from": account})
+#     iUniSwapPair = interface.IUniswapV2Pair(wrapper)
+#     (r0, r1, timestamp) = iUniSwapPair.getReserves()
+#     print(f"Reserves: {r0}")
+#     time.sleep(5)
+#     # Test lpSwap
+#     tx_price = lpSwap.findLPSwap(
+#         iUniSwapPair,
+#         WETH_TOKEN_ADDRESS_ETH,
+#         USDT_TOKEN_ADDRESS_ETH,
+#         optimalSwap.UNI_ROUTER(),
+#         {"from": account},
+#     )
+#     tx_price.wait(1)
+#     price = tx_price.events[-1]["price"]
+#     print(f"Prix du lp token: {price}")
+#     print(f"Events: {tx_price.events[-1]}")
+
+#     reserve0 = lpSwap.reserve0()
+#     print(f"reserve0 of deployed contract: {reserve0}")
+#     token0 = lpSwap.t0()
+#     print(f"address of token0 of deployed contract: {token0}")

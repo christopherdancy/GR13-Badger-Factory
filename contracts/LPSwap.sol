@@ -4,10 +4,22 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./utils/HomoraMath.sol";
 import "../interfaces/ILPSwap.sol";
+import "../interfaces/IUniswapV2Pair.sol";
 
 contract LPSwap is ILPSwap {
     using SafeMath for uint256;
     using HomoraMath for uint256;
+    uint256 public reserve0;
+    address public t0;
+    event Price(
+        uint256 indexed price,
+        uint256 r0,
+        uint256 LPWeth,
+        uint256 totalSupply,
+        uint256 sqrtK,
+        uint256 px0,
+        uint256 px1
+    );
 
     function findLPSwap(
         IUniswapV2Pair pair,
@@ -19,7 +31,10 @@ contract LPSwap is ILPSwap {
         address token0 = IUniswapV2Pair(pair).token0();
         address token1 = IUniswapV2Pair(pair).token1();
         uint256 totalSupply = IUniswapV2Pair(pair).totalSupply();
-        (uint256 r0, uint256 r1, ) = IUniswapV2Pair(pair).getReserves();
+        (uint256 r0, uint256 r1, uint256 timestamp) = IUniswapV2Pair(pair)
+            .getReserves();
+        reserve0 = r0;
+        t0 = token0;
         // Calulcate K
         uint256 sqrtK = HomoraMath.sqrt(r0.mul(r1)).fdiv(totalSupply); // in 2**112
         // Reserves value in ETH
@@ -38,20 +53,38 @@ contract LPSwap is ILPSwap {
             .div(2**56);
         // Lp(each) value in USD
         lpUSD = _checkUni(weth, usdDenomToken, LPWeth, router);
+        emit Price(lpUSD, r0, LPWeth, totalSupply, sqrtK, px0, px1);
     }
 
-    function _checkUni(address tokenIn, address weth, uint256 amountIn, IUniswapRouterV2 router) internal returns(uint px) {
-            // Check uni (Can Revert)
-            address[] memory path = new address[](2);
-            path[0] = address(tokenIn);
-            path[1] = address(weth);
+    function _checkUni(
+        address tokenIn,
+        address weth,
+        uint256 amountIn,
+        IUniswapRouterV2 router
+    ) internal returns (uint256 px) {
+        // Check uni (Can Revert)
+        address[] memory path = new address[](2);
+        path[0] = address(weth);
+        path[1] = address(tokenIn);
 
-            try router.getAmountsOut(amountIn, path) returns (
-                uint256[] memory uniAmounts
-            ) {
-                px = uniAmounts[uniAmounts.length - 1]; // Last one is the outToken
-            } catch (bytes memory) {
-                // We ignore as it means it's zero
+        try router.getAmountsOut(amountIn, path) returns (
+            uint256[] memory uniAmounts
+        ) {
+            px = uniAmounts[uniAmounts.length - 1]; // Last one is the outToken
+            if (px == 0) {
+                address[] memory revertedpath = new address[](2);
+                revertedpath[0] = address(tokenIn);
+                revertedpath[1] = address(weth);
+                try router.getAmountsOut(amountIn, revertedpath) returns (
+                    uint256[] memory uniAmounts
+                ) {
+                    px = uniAmounts[uniAmounts.length - 1]; // Last one is the outToken
+                } catch (bytes memory) {
+                    // We ignore as it means it's zero
+                }
             }
+        } catch (bytes memory) {
+            // We ignore as it means it's zero
+        }
     }
 }
