@@ -15,6 +15,9 @@ contract OptimalSwap {
     }
 
     /// @dev View function for testing the routing of the strategy
+    /// @param tokenIn Token user wants to exchange
+    /// @param tokenOut Token user is exchanging for
+    /// @param amountIn Total Tokens user wants to exchange
     function findOptimalSwap(
         address tokenIn,
         address tokenOut,
