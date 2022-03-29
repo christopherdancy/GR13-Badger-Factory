@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./utils/HomoraMath.sol";
 import "../interfaces/ILPSwap.sol";
-import "../interfaces/IUniswapV2Pair.sol";
+import "../interfaces/swaps/IUniswapV2Pair.sol";
 
 contract LPSwap is ILPSwap {
     using SafeMath for uint256;
