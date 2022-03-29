@@ -37,6 +37,8 @@ from scripts.constants import (
 
 
 def main():
+    # will deploy a base contract, factory, and a cloned contract with lp token address
+    # and then print the userDepositCap of deployed contract
     wrapper = LP_RADIX_USDC_ETH
     account = get_account()
 
@@ -159,6 +161,8 @@ def deploy_contract_lp(
 
 def get_paramaters():
     # Deploy contracts or get the contract on the blockchain depending of the network
+    # For local environments we will deploy our own ERC20 token for wrapper
+
     if (
         network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS
         and network.show_active() not in FORKED_LOCAL_ENVIRONMENTS
@@ -220,28 +224,24 @@ def deploy_swap(curve_address, uniswap_address):
     return optimalSwap
 
 
-# curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
-#     unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
-#     optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
-#     lpSwap = LPSwap.deploy({"from": account})
-#     iUniSwapPair = interface.IUniswapV2Pair(wrapper)
-#     (r0, r1, timestamp) = iUniSwapPair.getReserves()
-#     print(f"Reserves: {r0}")
-#     time.sleep(5)
-#     # Test lpSwap
-#     tx_price = lpSwap.findLPSwap(
-#         iUniSwapPair,
-#         WETH_TOKEN_ADDRESS_ETH,
-#         USDT_TOKEN_ADDRESS_ETH,
-#         optimalSwap.UNI_ROUTER(),
-#         {"from": account},
-#     )
-#     tx_price.wait(1)
-#     price = tx_price.events[-1]["price"]
-#     print(f"Prix du lp token: {price}")
-#     print(f"Events: {tx_price.events[-1]}")
-
-#     reserve0 = lpSwap.reserve0()
-#     print(f"reserve0 of deployed contract: {reserve0}")
-#     token0 = lpSwap.t0()
-#     print(f"address of token0 of deployed contract: {token0}")
+def print_lp_swap_events():
+    curve_router = interface.ICurveRouter(CURVE_ROUTER_ADDRESS_ETH)
+    unispooky_router = interface.IUniswapRouterV2(UNISWAP_ROUTER_ADDRESS_ETH)
+    optimalSwap = OptimalSwap.deploy(curve_router, unispooky_router, {"from": account})
+    lpSwap = LPSwap.deploy({"from": account})
+    iUniSwapPair = interface.IUniswapV2Pair(wrapper)
+    (r0, r1, timestamp) = iUniSwapPair.getReserves()
+    print(f"Reserves: {r0}")
+    time.sleep(5)
+    # Test lpSwap
+    tx_price = lpSwap.findLPSwap(
+        iUniSwapPair,
+        WETH_TOKEN_ADDRESS_ETH,
+        USDT_TOKEN_ADDRESS_ETH,
+        optimalSwap.UNI_ROUTER(),
+        {"from": account},
+    )
+    tx_price.wait(1)
+    price = tx_price.events[-1]["price"]
+    print(f"Prix du lp token: {price}")
+    print(f"Events: {tx_price.events[-1]}")

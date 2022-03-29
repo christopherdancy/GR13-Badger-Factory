@@ -2,17 +2,20 @@ from brownie import Contract
 import brownie
 from web3 import Web3
 
+# For these tests we have used USDT for stable coin,
+# LINK for wrapper and a RADIX/USDC contract pool for LP Token address
+
+# User deposit cap in dollars
 USER_CAP = 100000000000000000000000000000000000000
 TOTAL_CAP = 200000000000000000000000000000000000000
 # Initial MERCKLE_ROOT = "0x1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
-PROOF = "51a28cb1f89d415ae4ed269415b7ab13e5dfb042563757c2060655515f519eef"
-MERCKLE_ROOT = "81d6a101df3196b51ba6e781f04e393d6b3baff286af78be9e3029c74880395a"
+PROOF = "0x1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
+MERCKLE_ROOT = "0x1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
 
 
 # Address for ETH network
 # Address on ether not found
 UNISWAP_ROUTER_ADDRESS_ETH = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
-aze = "0xD1602F68CC7C4c7B59D686243EA35a9C73B0c6a2"
 # Curve / Doesn't revert on failure
 CURVE_ROUTER_ADDRESS_ETH = "0xD1602F68CC7C4c7B59D686243EA35a9C73B0c6a2"
 

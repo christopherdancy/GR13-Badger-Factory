@@ -11,7 +11,7 @@ compiler:
      - "@openzeppelin-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/"
 dotenv: .env
 networks:
-  default: 'development'
+  default: 'mainnet-fork'
   development:
     keyhash: '0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4'
     fee: 10_000_000_000_000_000
